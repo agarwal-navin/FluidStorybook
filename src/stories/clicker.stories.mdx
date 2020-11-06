@@ -14,9 +14,14 @@ made by different users. `SharedCounter` allows whole numbers to be incremented.
 
 * <a href="https://fluidframework.com/apis/counter/sharedcounter/" target="_blank">SharedCounter</a>
 
-<Story name="Demo">
-  <FluidLoader factory={ClickerContainerFactory} title={Clicker.DataObjectName}></FluidLoader>
-</Story>
+<Canvas>
+  <Story name="Local Server">
+    <FluidLoader factory={ClickerContainerFactory} title={"Clicker"}></FluidLoader>
+  </Story>
+  <Story name="Fluid Relay Service">
+    <FluidLoader factory={ClickerContainerFactory} title={"Clicker"} mode={"frs"}></FluidLoader>
+  </Story>
+</Canvas>
 
 <br /><br />
 

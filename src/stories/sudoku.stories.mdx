@@ -12,9 +12,14 @@ This example allows multiple users to collaborate in real-time on a game of Sudo
 
 * <a href="https://fluidframework.com/apis/map/sharedmap/" target="_blank">SharedMap</a>
 
-<Story name="Demo">
-  <FluidLoader factory={fluidExport} title={FluidSudokuName}></FluidLoader>
-</Story>
+<Canvas>
+  <Story name="Local Server">
+    <FluidLoader factory={fluidExport} title={"Sudoku"}></FluidLoader>
+  </Story>
+  <Story name="Fluid Relay Service">
+    <FluidLoader factory={fluidExport} title={"Sudoku"} mode={"frs"}></FluidLoader>
+  </Story>
+</Canvas>
 
 <br /><br />
 

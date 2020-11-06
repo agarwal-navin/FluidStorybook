@@ -155,3 +155,10 @@ div.sbdocs-content {
 .windows .windows-close-icon {
     font-weight: 300;
 }
+
+.window .share-button {
+    display: none;
+    margin-top: 0px;
+    float: right;
+    width: 15px;
+}

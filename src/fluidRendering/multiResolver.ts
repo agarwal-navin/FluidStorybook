@@ -4,42 +4,20 @@
  */
 
 // eslint-disable-next-line import/no-internal-modules
-import { v4 as uuid } from "uuid";
 import { IRequest } from "@fluidframework/core-interfaces";
 import { IResolvedUrl, IUrlResolver } from "@fluidframework/driver-definitions";
 import { LocalResolver } from "@fluidframework/local-driver";
-import { IUser } from "@fluidframework/protocol-definitions";
-import { getRandomName } from "@fluidframework/server-services-client";
-import { InsecureUrlResolver } from "@fluidframework/test-runtime-utils";
+import { FRSUrlResolver } from "./frsUrlResolver";
+import { RouteOptions } from "./types";
 
-export interface IDevServerUser extends IUser {
-    name: string;
+interface IMultiUrlResolver extends IUrlResolver {
+    createCreateNewRequest(fileName: string): IRequest;
 }
 
-export const tinyliciousUrls = {
-    hostUrl: "http://localhost:3000",
-    ordererUrl: "http://localhost:3000",
-    storageUrl: "http://localhost:3000",
-};
-
-const getUser = (): IDevServerUser => ({
-    id: uuid(),
-    name: getRandomName(),
-});
-
-function getUrlResolver(
-    options: any,
-): IUrlResolver {
+function getUrlResolver(options: RouteOptions): IMultiUrlResolver {
     switch (options.mode) {
-        case "tinylicious":
-            return new InsecureUrlResolver(
-                tinyliciousUrls.hostUrl,
-                tinyliciousUrls.ordererUrl,
-                tinyliciousUrls.storageUrl,
-                "tinylicious",
-                "12345",
-                getUser(),
-                options.bearerSecret);
+        case "frs":
+            return new FRSUrlResolver("frs.office-int.com", options.tenantId, options.authToken);
 
         default: // Local
             return new LocalResolver();
@@ -47,11 +25,11 @@ function getUrlResolver(
 }
 
 export class MultiUrlResolver implements IUrlResolver {
-    private readonly urlResolver: IUrlResolver;
+    private readonly urlResolver: IMultiUrlResolver;
     constructor(
         private readonly rawUrl: string,
         private readonly documentId: string,
-        private readonly options: any) {
+        options: RouteOptions) {
         this.urlResolver = getUrlResolver(options);
     }
 
@@ -70,11 +48,6 @@ export class MultiUrlResolver implements IUrlResolver {
     public async createRequestForCreateNew(
         fileName: string,
     ): Promise<IRequest> {
-        switch (this.options.mode) {
-            case "tinylicious":
-                return (this.urlResolver as InsecureUrlResolver).createCreateNewRequest(fileName);
-            default: // Local
-                return (this.urlResolver as LocalResolver).createCreateNewRequest(fileName);
-        }
+        return this.urlResolver.createCreateNewRequest(fileName);
     }
 }

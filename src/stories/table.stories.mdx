@@ -13,10 +13,14 @@ renaming columns, and updating values in the table.
 
 * <a href="https://fluidframework.com/apis/matrix/sharedmatrix/" target="_blank">SharedMatrix</a>
 
-
-<Story name="Demo">
-  <FluidLoader factory={TableContainerFactory} title={FluidTable.FluidObjectName}></FluidLoader>
-</Story>
+<Canvas>
+  <Story name="Local Server">
+    <FluidLoader factory={TableContainerFactory} title={"Table"}></FluidLoader>
+  </Story>
+  <Story name="Fluid Relay Service">
+    <FluidLoader factory={TableContainerFactory} title={"Table"} mode={"frs"}></FluidLoader>
+  </Story>
+</Canvas>
 
 <br /><br />
 

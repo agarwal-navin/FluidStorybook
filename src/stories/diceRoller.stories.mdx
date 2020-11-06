@@ -16,9 +16,14 @@ TypeScript and React to render the output. Another example that uses vanilla Jav
 
 * <a href="https://fluidframework.com/apis/map/shareddirectory/" target="_blank">SharedDirectory</a>
 
-<Story name="Demo">
-  <FluidLoader factory={DiceRollerContainer} title={DiceRoller.DataObjectName} view={DiceRollerView} viewType="react"></FluidLoader>
-</Story>
+<Canvas>
+  <Story name="Local Server">
+    <FluidLoader factory={DiceRollerContainer} title={"Dice Roller"} view={DiceRollerView} viewType="react"></FluidLoader>
+  </Story>
+  <Story name="Fluid Relay Service">
+        <FluidLoader factory={DiceRollerContainer} title={"Dice Roller"} view={DiceRollerView} viewType="react" mode={"frs"}></FluidLoader>
+  </Story>
+</Canvas>
 
 <br /><br />
 

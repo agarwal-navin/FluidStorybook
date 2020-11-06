@@ -16,9 +16,14 @@ and you'll see that it is passed in real-time to the other collaborator.
 * <a href="https://fluidframework.com/apis/cell/sharedcell/" target="_blank">SharedCell</a>
 * <a href="https://fluidframework.com/apis/sequence/sharedobjectsequence/" target="_blank">SharedObjectSequence</a>
 
-<Story name="Demo">
-  <FluidLoader factory={BadgeContainerFactory} title={Badge.factory.type}></FluidLoader>
-</Story>
+<Canvas>
+  <Story name="Local Server">
+    <FluidLoader factory={BadgeContainerFactory} title={"Badge"}></FluidLoader>
+  </Story>
+  <Story name="Fluid Relay Service">
+    <FluidLoader factory={BadgeContainerFactory} title={"Badge"} mode={"frs"}></FluidLoader>
+  </Story>
+</Canvas>
 
 <br /><br />
 

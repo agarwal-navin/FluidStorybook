@@ -10,8 +10,9 @@ import {
 } from "@fluidframework/container-definitions";
 import { Container } from '@fluidframework/container-loader';
 import { requestFluidObject } from "@fluidframework/runtime-utils";
-import { getLoader, RouteOptions } from './loader';
+import { getLoader } from './loader';
 import { renderFluidDataObjects } from './renderer';
+import { RouteOptions } from "./types";
 
 export interface FluidLoaderProps {
     factory: IProvideRuntimeFactory,
@@ -19,6 +20,7 @@ export interface FluidLoaderProps {
     layout?: string,
     view?: any,
     viewType?: string,
+    mode?: "local" | "frs",
 }
 
 export const FluidLoader = (props: React.PropsWithChildren<FluidLoaderProps>) => { 
@@ -30,22 +32,26 @@ export const FluidLoader = (props: React.PropsWithChildren<FluidLoaderProps>) =>
             // You could also grab a specific data object from the container using "nameOfDataObject"
             // For example in DiceRoller you could use "@fluid-example/dice-roller"
             const dataObjectName = "";
-            let options: RouteOptions = { mode: "local" };
+            let options: RouteOptions = { mode: props.mode ?? "local" };
 
             // Create a new Container.
             const container1 = await createFluidContainer(props.factory, options);
             // Get the Fluid DataObject from the first Container.
             const fluidDataObject1 = await requestFluidObject(container1, dataObjectName);
 
-            // Load a second Container from the Container that we created above.
-            const container2 = await loadFluidContainer(props.factory, container1, options);
-            // Get the Fluid DataObject from the second Container.
-            const fluidDataObject2 = await requestFluidObject(container2, dataObjectName);
+            let fluidDataObject2;
+            if (!isSingleMode()) {
+                // Load a second Container from the Container that we created above.
+                const container2 = await loadFluidContainer(props.factory, container1, options);
+                // Get the Fluid DataObject from the second Container.
+                fluidDataObject2 = await requestFluidObject(container2, dataObjectName);
+            }
 
             // Handle rendering
-            let fluidNode = await renderFluidDataObjects(props, fluidDataObject1, fluidDataObject2) as HTMLElement;
+            let fluidNode = await renderFluidDataObjects(props, container1.id, fluidDataObject1, fluidDataObject2) as HTMLElement;
             fluidNodeRef.current?.appendChild(fluidNode);
         }
+
         render();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -54,6 +60,7 @@ export const FluidLoader = (props: React.PropsWithChildren<FluidLoaderProps>) =>
     return (
         <div id="fluid-container">
             <br />
+            <h3>{props.title}</h3>
             <div ref={fluidNodeRef}></div>
         </div>
     );
@@ -61,6 +68,20 @@ export const FluidLoader = (props: React.PropsWithChildren<FluidLoaderProps>) =>
 
 // A cache of the document id per fluid runtime factory.
 const documentIdCache = new Map<IProvideRuntimeFactory, string>();
+
+function getDocumentIdFromUrl(): string | null {
+    const searchParams = new URLSearchParams(window.location.search);
+    const documentId = searchParams.get("documentId");
+    return documentId;
+}
+
+export function isSingleMode(): boolean {
+    return getDocumentIdFromUrl() !== null;
+}
+
+function getExistingDocumentId(factory: IProvideRuntimeFactory): string | undefined {
+    return getDocumentIdFromUrl() ?? documentIdCache.get(factory);
+}
 
 /**
  * Creates a Loader and a Container.
@@ -73,15 +94,15 @@ async function createFluidContainer(
     factory: IProvideRuntimeFactory,
     options: RouteOptions,
 ): Promise<Container> {
+    let createDocument: boolean = false;
     // Check if we already have created a document for this Fluid factory in this session. If so, load the
     // existing document instead of creating a new one.
-    let createDocument: boolean = false;
-    let documentId = documentIdCache.get(factory);
+    let documentId = getExistingDocumentId(factory);
     if (documentId === undefined) {
         // A document does not exist for this session. Create a documentId to be used to create a new document
         // and set the 'createDocument' flag to true.
         documentId = uuid();
-        documentIdCache.set(factory, documentId);
+        // documentIdCache.set(factory, documentId);
         createDocument = true;
     }
 

@@ -16,9 +16,14 @@ uses JavaScript and the DOM to render the output.
 
 * <a href="https://fluidframework.com/apis/map/shareddirectory/" target="_blank">SharedDirectory</a>
 
-<Story name="Demo">
-    <FluidLoader factory={DiceRollerContainer} title={DiceRoller.DataObjectName} view={DiceRollerView} viewType="js"></FluidLoader>
-</Story>
+<Canvas>
+  <Story name="Local Server">
+    <FluidLoader factory={DiceRollerContainer} title={"Dice Roller JS"} view={DiceRollerView} viewType="js"></FluidLoader>
+  </Story>
+  <Story name="Fluid Relay Service">
+    <FluidLoader factory={DiceRollerContainer} title={"Dice Roller JS"} view={DiceRollerView} viewType="js" mode={"frs"}></FluidLoader>
+  </Story>
+</Canvas>
 
 <br /><br />
 

@@ -14,9 +14,14 @@ between multiple rich-text editors.
 * <a href="https://fluidframework.com/apis/map/sharedmap/" target="_blank">SharedMap</a>
 * <a href="https://fluidframework.com/apis/sequence/sharedstring/" target="_blank">SharedString</a>
 
-<Story name="Demo">
-  <FluidLoader factory={FluidDraftJsContainer} title={FluidDraftJsObject.Name} view={FluidDraftJsView} viewType="react"></FluidLoader>
-</Story>
+<Canvas>
+  <Story name="Local Server">
+    <FluidLoader factory={FluidDraftJsContainer} title={"Draft-JS"} view={FluidDraftJsView} viewType="react"></FluidLoader>
+  </Story>
+  <Story name="Fluid Relay Service">
+    <FluidLoader factory={FluidDraftJsContainer} title={"Draft-JS"} view={FluidDraftJsView} viewType="react" mode="frs"></FluidLoader>
+  </Story>
+</Canvas>
 
 <br /><br />
 

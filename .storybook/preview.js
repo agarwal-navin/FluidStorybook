@@ -21,6 +21,5 @@ export const parameters = {
     showPanel: false,
     storySort: storySort(sortOptions)
   },
-	viewMode: 'docs'
 }
 
