@@ -97,6 +97,13 @@ div.sbdocs-content {
     margin-bottom: 2px;
 }
 
+.window .mac-share-button {
+    display: none;
+    margin-top: 0px;
+    float: right;
+    width: 15px;
+}
+
 .browser div.header span.title {
     background: #fff;
     display: inline-block;
@@ -156,9 +163,7 @@ div.sbdocs-content {
     font-weight: 300;
 }
 
-.window .share-button {
-    display: none;
-    margin-top: 0px;
-    float: right;
+.window .windows-share-button {
+    display: inline-block;
     width: 15px;
 }
